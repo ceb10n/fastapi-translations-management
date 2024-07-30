@@ -32,6 +32,11 @@ classifiers = [
     'Topic :: Internet',
 ]
 requires-python = '>=3.12'
+dependencies = [
+    'gitpython==3.1.43',
+    'pydantic==2.8.2',
+    'typer==0.12.3'
+]
 dynamic = ['version']
 
 [project.scripts]

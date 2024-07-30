@@ -72,7 +72,7 @@ def report(
 
     for root, _, files in track(
         os.walk(en_docs_path),
-        f"🚶 Walking through {base_docs_path} looking for 📂 docs",
+        "🚶 Walking through 📂 docs looking for 🔠 translations",
     ):
         for file in files:
             if file.endswith(".md"):
