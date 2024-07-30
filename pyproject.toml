@@ -33,3 +33,55 @@ classifiers = [
 ]
 requires-python = '>=3.12'
 dynamic = ['version']
+
+[project.scripts]
+fastapi_translations = "fastapi_translation.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = 'tests'
+log_cli = true
+log_cli_level = "ERROR"
+log_cli_format = "%(message)s"
+
+[tool.coverage.run]
+source = ['fastapi_translation']
+branch = true
+context = '${CONTEXT}'
+
+[tool.coverage.report]
+precision = 2
+
+[tool.coverage.paths]
+source = ['fastapi_translation/']
+
+[tool.ruff]
+line-length = 80
+target-version = 'py312'
+
+[tool.ruff.lint]
+extend-select = ['Q', 'RUF100', 'C90', 'UP', 'I']
+flake8-quotes = { inline-quotes = 'double', multiline-quotes = 'double' }
+isort = { known-first-party = ['fastapi_translation', 'tests'] }
+mccabe = { max-complexity = 14 }
+pydocstyle = { convention = 'google' }
+
+[tool.ruff.format]
+quote-style = 'double'
+indent-style = 'space'
+
+[tool.mypy]
+python_version = '3.12'
+show_error_codes = true
+follow_imports = 'silent'
+strict_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+warn_unused_configs = true
+disallow_subclassing_any = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
