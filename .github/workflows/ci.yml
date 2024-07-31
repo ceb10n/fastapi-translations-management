@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '**'
+  pull_request: {}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: set up python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: install deps
+      run: pip install -r requirements-test.txt
+
+    - uses: pre-commit/action@v3.0.1
+      with:
+        extra_args: --all-files
+  test:
+    name: Test py${{ matrix.python }} on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.12']
+
+    env:
+      PYTHON: ${{ matrix.python }}
+      OS: ${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: set up python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python }}
+
+    - run: pip install -r requirements-test.txt
+
+    - name: test
+      run: coverage run -m pytest --durations=10
+      env:
+        COVERAGE_FILE: .coverage.${{ runner.os }}-py${{ matrix.python }}-without-dotenv
+        CONTEXT: ${{ runner.os }}-py${{ matrix.python }}-without-dotenv
+
+    - run: coverage combine
+    - run: coverage xml
+
+    - uses: codecov/codecov-action@v4.5.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
+        env_vars: PYTHON,OS
+
+  release:
+    name: Release
+    needs: [lint, test]
+    if: success() && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: install
+        run: pip install -U build
+
+      - name: build
+        run: python -m build
+
+      - name: Upload package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

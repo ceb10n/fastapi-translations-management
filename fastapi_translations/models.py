@@ -13,6 +13,7 @@ class DocFile(BaseModel):
     translation_commit: datetime | None
     translation_is_outdated: bool
 
+
 class Summary(BaseModel):
     lang: str
     files_analyzed: int = 0
@@ -21,20 +22,35 @@ class Summary(BaseModel):
     files_missing_translation: int = 0
     files: list[DocFile] = []
 
+    @computed_field  # type: ignore
     @property
-    @computed_field
     def percentage_translated(self) -> float:
-        return 100 * float(self.files_translated) / float(self.files_analyzed)
+        try:
+            return (
+                100 * float(self.files_translated) / float(self.files_analyzed)
+            )
+        except Exception:
+            return 0.0
 
+    @computed_field  # type: ignore
     @property
-    @computed_field
     def percentage_missing_translation(self) -> float:
-        return 100 * float(self.files_missing_translation) / float(self.files_analyzed)
+        try:
+            return (
+                100
+                * float(self.files_missing_translation)
+                / float(self.files_analyzed)
+            )
+        except Exception:
+            return 0.0
 
+    @computed_field  # type: ignore
     @property
-    @computed_field
     def percentage_outdated_translation(self) -> float:
-        return 100 * float(self.files_outdated) / float(self.files_analyzed)
+        try:
+            return 100 * float(self.files_outdated) / float(self.files_analyzed)
+        except Exception:
+            return 0.0
 
     def append_file(self, doc: DocFile) -> None:
         self.files.append(doc)
@@ -50,7 +66,13 @@ class Summary(BaseModel):
             self.files_outdated += 1
 
     def first_outdated_files(self, lenght: int = 10) -> list[DocFile]:
-        return list(filter(lambda d: d.translation_is_outdated, self.files))[:lenght]
+        return list(filter(lambda d: d.translation_is_outdated, self.files))[
+            :lenght
+        ]
 
-    def first_missing_translation_files(self, lenght: int = 10) -> list[DocFile]:
-        return list(filter(lambda d: not d.translation_exists, self.files))[:lenght]
+    def first_missing_translation_files(
+        self, lenght: int = 10
+    ) -> list[DocFile]:
+        return list(filter(lambda d: not d.translation_exists, self.files))[
+            :lenght
+        ]
