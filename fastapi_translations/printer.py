@@ -3,7 +3,7 @@ import csv
 from rich.console import Console
 from rich.table import Table
 
-from fastapi_translation.models import DocFile, Summary
+from fastapi_translations.models import DocFile, Summary
 
 
 def print_table(summary: Summary, console: Console, table_size: int = 10) -> None:

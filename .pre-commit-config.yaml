@@ -12,13 +12,13 @@ repos:
   hooks:
   - id: lint
     name: Lint
-    entry: ruff check pydantic_settings_aws
+    entry: ruff check fastapi_translations
     types: [python]
     language: system
     pass_filenames: false
   - id: mypy
     name: Mypy
-    entry: mypy pydantic_settings_aws
+    entry: mypy fastapi_translations
     types: [python]
     language: system
     pass_filenames: false

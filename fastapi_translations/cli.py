@@ -4,13 +4,12 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
-from rich import print
 from rich.console import Console
 from rich.progress import track
 
-from fastapi_translation.git import FastAPIGitDocs
-from fastapi_translation.models import DocFile, Summary
-from fastapi_translation import printer
+from fastapi_translations import printer
+from fastapi_translations.git import FastAPIGitDocs
+from fastapi_translations.models import DocFile, Summary
 
 console = Console()
 
@@ -61,7 +60,7 @@ def report(
             help="Save all missing and outdated translations to a csv file"
         )
     ] = False
-):
+) -> None:
     """Generate a report for the translated docs"""
     base_docs_path = Path("docs")
     en_docs_path = Path("docs/en")
@@ -97,7 +96,6 @@ def report(
                     translation_exists=translation_exists,
                     translation_commit=translated_date,
                     translation_is_outdated=translation_exists
-                    and translated_date > original_doc_date,
                 )
                 summary.append_file(doc)
     printer.print_table(summary, console, 10)

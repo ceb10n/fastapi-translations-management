@@ -3,10 +3,10 @@ requires = ['hatchling']
 build-backend = 'hatchling.build'
 
 [tool.hatch.version]
-path = 'fastapi_translation/version.py'
+path = 'fastapi_translations/version.py'
 
 [project]
-name = 'fastapi-translation'
+name = 'fastapi-translations'
 description = 'Translations report for FastAPI docs'
 authors = [
     { name = 'Rafael de Oliveira Marques', email = 'rafaelomarques@gmail.com' },
@@ -40,7 +40,7 @@ dependencies = [
 dynamic = ['version']
 
 [project.scripts]
-fastapi_translations = "fastapi_translation.cli:main"
+fastapi_translations = "fastapi_translations.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = 'tests'
@@ -49,7 +49,7 @@ log_cli_level = "ERROR"
 log_cli_format = "%(message)s"
 
 [tool.coverage.run]
-source = ['fastapi_translation']
+source = ['fastapi_translations']
 branch = true
 context = '${CONTEXT}'
 
@@ -57,7 +57,7 @@ context = '${CONTEXT}'
 precision = 2
 
 [tool.coverage.paths]
-source = ['fastapi_translation/']
+source = ['fastapi_translations/']
 
 [tool.ruff]
 line-length = 80
@@ -66,7 +66,7 @@ target-version = 'py312'
 [tool.ruff.lint]
 extend-select = ['Q', 'RUF100', 'C90', 'UP', 'I']
 flake8-quotes = { inline-quotes = 'double', multiline-quotes = 'double' }
-isort = { known-first-party = ['fastapi_translation', 'tests'] }
+isort = { known-first-party = ['fastapi_translations', 'tests'] }
 mccabe = { max-complexity = 14 }
 pydocstyle = { convention = 'google' }
 

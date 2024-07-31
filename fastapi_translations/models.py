@@ -7,7 +7,7 @@ class DocFile(BaseModel):
     official_lang: str = "en"
     translation_lang: str
     original_file: str
-    original_commit: datetime
+    original_commit: datetime | None
     translation_file: str | None = None
     translation_exists: bool
     translation_commit: datetime | None
@@ -21,18 +21,18 @@ class Summary(BaseModel):
     files_missing_translation: int = 0
     files: list[DocFile] = []
 
-    @computed_field
     @property
+    @computed_field
     def percentage_translated(self) -> float:
         return 100 * float(self.files_translated) / float(self.files_analyzed)
 
-    @computed_field
     @property
+    @computed_field
     def percentage_missing_translation(self) -> float:
         return 100 * float(self.files_missing_translation) / float(self.files_analyzed)
 
-    @computed_field
     @property
+    @computed_field
     def percentage_outdated_translation(self) -> float:
         return 100 * float(self.files_outdated) / float(self.files_analyzed)
 

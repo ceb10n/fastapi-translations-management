@@ -12,3 +12,5 @@ class FastAPIGitDocs:
         commits = list(self.repo.iter_commits(paths=file, max_count=1))
         if commits:
             return commits[0].committed_datetime
+
+        return None
