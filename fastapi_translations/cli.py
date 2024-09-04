@@ -86,7 +86,11 @@ def report(
                 original_doc_date = git.get_commit_date_for(
                     os.path.join(root, file)
                 )
+                translation_is_outdated = False
                 translated_date = git.get_commit_date_for(translated_path)
+
+                if translated_date and original_doc_date:
+                    translation_is_outdated = translated_date > original_doc_date
 
                 doc = DocFile(
                     translation_lang=lang.value,
@@ -95,7 +99,7 @@ def report(
                     translation_file=translated_path,
                     translation_exists=translation_exists,
                     translation_commit=translated_date,
-                    translation_is_outdated=translation_exists
+                    translation_is_outdated=translation_is_outdated
                 )
                 summary.append_file(doc)
     printer.print_table(summary, console, 10)
