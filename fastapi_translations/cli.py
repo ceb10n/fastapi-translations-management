@@ -1,3 +1,4 @@
+import fnmatch
 import os
 from enum import Enum, unique
 from pathlib import Path
@@ -15,6 +16,16 @@ console = Console()
 
 app = typer.Typer(rich_markup_mode="rich")
 
+restricted_list = [
+    "*reference/*",
+    "*release-notes.md",
+    "*fastapi-people.md",
+    "*external-links.md",
+    "*newsletter.md",
+    "*management-tasks.md",
+    "*management.md",
+    "*contributing.md",
+]
 
 @unique
 class Languages(Enum):
@@ -78,6 +89,9 @@ def report(
                 file_relative_path = os.path.relpath(
                     os.path.join(root, file), en_docs_path
                 )
+                if file_in_reserved_list(file_relative_path):
+                    continue
+
                 translated_path = os.path.join(
                     base_docs_path, lang.value, file_relative_path
                 )
@@ -106,6 +120,16 @@ def report(
 
     if save_csv:
         printer.print_to_csv(summary)
+
+
+def file_in_reserved_list(file: str) -> bool:
+    for reserved in restricted_list:
+        if fnmatch.fnmatch(file, reserved):
+            print(f"{file} matches {reserved}")
+            return True
+
+    print(f"{file} doesn't match {reserved}")
+    return False
 
 
 def main() -> None:
