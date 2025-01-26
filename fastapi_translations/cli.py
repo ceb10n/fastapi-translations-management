@@ -127,7 +127,7 @@ def file_in_reserved_list(file: str) -> bool:
         if fnmatch.fnmatch(file, reserved):
             print(f"{file} matches {reserved}")
             return True
-    
+
     print(f"{file} doesn't match {reserved}")
     return False
 
