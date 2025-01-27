@@ -3,7 +3,7 @@ import csv
 from rich.console import Console
 from rich.table import Table
 
-from fastapi_translations.models import DocFile, Summary
+from fastapi_translations.translations import Document, Summary
 
 
 def print_table(summary: Summary, console: Console, table_size: int = 10) -> None:
@@ -60,7 +60,7 @@ def print_table(summary: Summary, console: Console, table_size: int = 10) -> Non
 
 
 def print_to_csv(summary: Summary) -> None:
-    header = DocFile.model_fields.keys()
+    header = Document.model_fields.keys()
     with open(f"fastapi-translations-lang-{summary.lang}.csv", "w", newline="") as f:
         writer = csv.DictWriter(f, header)
         writer.writeheader()
