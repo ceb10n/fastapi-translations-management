@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 
 class Document(BaseModel):
@@ -11,4 +11,11 @@ class Document(BaseModel):
     translation_file: str | None = None
     translation_exists: bool
     translation_commit: datetime | None
-    translation_is_outdated: bool
+
+    @computed_field  # type: ignore
+    @property
+    def translation_is_outdated(self) -> bool:
+        if not self.original_commit or not self.translation_commit:
+            return False
+
+        return self.original_commit > self.translation_commit

@@ -10,7 +10,10 @@ from ..git import FastAPIGitDocs
 from .document import Document
 
 base_docs_path = Path("docs")
+"""The base path for FastAPI documentation."""
+
 en_docs_path = Path("docs/en")
+"""The base path for FastAPI english documentation;"""
 
 restricted_list = [
     "*reference/*",
@@ -22,6 +25,13 @@ restricted_list = [
     "*management.md",
     "*contributing.md",
 ]
+"""list[str]: Restricted files and/or folders.
+
+FastAPI docs states that not all documents should be translated.
+You can find the reference in `Contributing`_.
+
+.. _Contributing: https://fastapi.tiangolo.com/contributing/#dont-translate-these-pages
+"""
 
 
 class Summary(BaseModel):
@@ -83,9 +93,6 @@ class Summary(BaseModel):
                     )
                     futures.append(future)
 
-            # for future in as_completed(futures):
-            #     progress.update(task, advance=1.0)
-
     def process_file(
         self,
         git: FastAPIGitDocs,
@@ -114,13 +121,8 @@ class Summary(BaseModel):
                 original_doc_date = git.get_commit_date_for(
                     os.path.join(root_dir, file)
                 )
-                translation_is_outdated = False
-                translated_date = git.get_commit_date_for(translated_path)
 
-                if translated_date and original_doc_date:
-                    translation_is_outdated = (
-                        translated_date > original_doc_date
-                    )
+                translated_date = git.get_commit_date_for(translated_path)
 
                 document = Document(
                     translation_lang=self.lang,
@@ -129,7 +131,6 @@ class Summary(BaseModel):
                     translation_file=translated_path,
                     translation_exists=translation_exists,
                     translation_commit=translated_date,
-                    translation_is_outdated=translation_is_outdated,
                 )
                 self.append_document(document)
 
