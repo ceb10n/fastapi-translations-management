@@ -1,40 +1,37 @@
 import datetime
 
-from fastapi_translations.models import DocFile, Summary
+from fastapi_translations.translations import Document, Summary
 
 
-def test_must_compute_summary_when_adding_docfile():
-    doc1 = DocFile(
+def test_must_compute_summary_when_adding_document():
+    doc1 = Document(
         translation_lang="es",
         original_file="/test/file1.md",
-        original_commit=datetime.datetime(2024, 1, 1, 0, 0, 0),
         translation_file="/test/file1.md",
         translation_exists=True,
+        original_commit=datetime.datetime(2024, 1, 1, 0, 0, 0),
         translation_commit=datetime.datetime(2024, 1, 15, 0, 0, 0),
-        translation_is_outdated=True
     )
-    doc2 = DocFile(
+    doc2 = Document(
         translation_lang="es",
         original_file="/test/file2.md",
-        original_commit=datetime.datetime(2024, 1, 1, 0, 0, 0),
         translation_file="/test/file2.md",
         translation_exists=True,
+        original_commit=datetime.datetime(2024, 1, 2, 0, 0, 0),
         translation_commit=datetime.datetime(2024, 1, 1, 0, 0, 0),
-        translation_is_outdated=False
     )
-    doc3 = DocFile(
+    doc3 = Document(
         translation_lang="es",
         original_file="/test/file3.md",
         original_commit=datetime.datetime(2024, 1, 1, 0, 0, 0),
         translation_file=None,
         translation_exists=False,
         translation_commit=None,
-        translation_is_outdated=False
     )
     summary = Summary(lang="es")
-    summary.append_file(doc1)
-    summary.append_file(doc2)
-    summary.append_file(doc3)
+    summary.append_document(doc1)
+    summary.append_document(doc2)
+    summary.append_document(doc3)
 
     assert summary.files_analyzed == 3
     assert summary.files_missing_translation == 1
